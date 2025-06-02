@@ -741,13 +741,13 @@ export const getCalendarsQueryFn = async (
   if (options?.onlyPrimary) params.append('onlyPrimary', 'true');
   if (options?.includeInactive) params.append('includeInactive', 'true');
   
-  const queryString = params.toString();
-  const endpoint = `/calendars${queryString ? `?${queryString}` : ''}`;
+  // const queryString = params.toString();
+  const endpoint = `/calendars`;
 
   console.log("📅 [GET_CALENDARS] Obteniendo lista de calendarios", {
     endpoint,
     options,
-    queryString
+    // queryString
   });
 
   try {
@@ -934,3 +934,4 @@ export const getCalendarStatsQueryFn = async () => {
     throw error;
   }
 };
+
