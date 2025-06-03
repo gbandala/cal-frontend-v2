@@ -27,12 +27,12 @@ import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/loader";
-import { 
-  getCalendarsQueryFn, 
-  syncCalendarsQueryFn 
+import {
+  getCalendarsQueryFn,
+  syncCalendarsQueryFn
 } from "@/lib/api";
-import { 
-  CalendarType, 
+import {
+  CalendarType,
   CalendarQueryOptions,
   getDefaultCalendar,
   filterCalendars,
@@ -44,34 +44,34 @@ import {
 interface CalendarSelectorProps {
   /** Valor seleccionado actualmente (calendar_id) */
   value?: string;
-  
+
   /** Callback cuando cambia la selección */
   onChange: (calendarId: string, calendarName: string) => void;
-  
+
   /** Placeholder para el dropdown */
   placeholder?: string;
-  
+
   /** Solo mostrar calendarios con permisos de escritura */
   onlyWritable?: boolean;
-  
+
   /** Solo mostrar calendarios activos */
   onlyActive?: boolean;
-  
+
   /** Permitir selección vacía */
   allowEmpty?: boolean;
-  
+
   /** Texto para opción vacía */
   emptyLabel?: string;
-  
+
   /** Si está deshabilitado */
   disabled?: boolean;
-  
+
   /** Clase CSS adicional */
   className?: string;
-  
+
   /** Mostrar botón de sincronización manual */
   showSyncButton?: boolean;
-  
+
   /** Callback para errores */
   onError?: (error: unknown) => void;
 }
@@ -99,10 +99,10 @@ const CalendarSelector = ({
   };
 
   // Query para obtener calendarios
-  const { 
-    data: calendarsResponse, 
-    isLoading, 
-    isError, 
+  const {
+    data: calendarsResponse,
+    isLoading,
+    isError,
     error,
     refetch
   } = useQuery({
@@ -113,9 +113,27 @@ const CalendarSelector = ({
   });
 
   // Procesar calendarios según filtros
-  const calendars = calendarsResponse?.data ? 
-    filterCalendars(calendarsResponse.data, queryOptions) : [];
+  const calendars = calendarsResponse?.data ?
+    filterCalendars(
+      calendarsResponse.data.map(cal => ({
+        ...cal,
+        isWritable: cal.accessRole === "owner" || cal.accessRole === "writer",
+        accessRole: cal.accessRole as CalendarAccessRole
+      })),
+      queryOptions
+    ) : [];
 
+  console.log('🔍 [CALENDAR] Filtered calendars:', calendars);
+  console.log('🔍 [CALENDAR] Calendar count:', calendars.length);
+  console.log('🔍 [CALENDAR] Query options:', queryOptions);
+  console.log('🔍 [CALENDAR] Raw API response:', calendarsResponse?.data?.[0]);
+  //   console.log('🔍 [CALENDAR_SELECTOR] Response structure:', {
+  //   full: calendarsResponse,
+  //   data: calendarsResponse?.data,
+  //   // responseData: calendarsResponse?.responseData,
+  //   // calendarsInData: calendarsResponse?.data?.data,
+  //   // calendarsInResponseData: calendarsResponse?.responseData?.data
+  // });
   // Auto-seleccionar calendario por defecto
   useEffect(() => {
     if (!value && calendars.length > 0 && !allowEmpty) {
@@ -140,10 +158,10 @@ const CalendarSelector = ({
   // Seleccionar calendario
   const handleSelectCalendar = (calendar: CalendarType | null) => {
     if (disabled) return;
-    
+
     setSelectedCalendar(calendar);
     setIsOpen(false);
-    
+
     if (calendar) {
       onChange(calendar.id, calendar.name);
     } else if (allowEmpty) {
@@ -167,6 +185,13 @@ const CalendarSelector = ({
     const badgeColor = getCalendarBadgeColor(calendar);
     const icon = getCalendarIcon(calendar);
 
+    console.log('🔍 [RENDER] Component state:', {
+      isOpen,
+      calendars: calendars.length,
+      isLoading,
+      isError,
+      selectedCalendar: selectedCalendar?.name
+    });
     return (
       <div
         key={calendar.id}
@@ -186,7 +211,7 @@ const CalendarSelector = ({
             </p>
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-2">
           {calendar.isPrimary && (
             <span className={cn("px-2 py-1 rounded-full text-xs font-medium", badgeColor)}>
@@ -222,7 +247,7 @@ const CalendarSelector = ({
             ) : (
               <Calendar className="w-4 h-4 text-gray-400" />
             )}
-            
+
             <span className={cn(
               "text-sm",
               selectedCalendar ? "text-gray-900" : "text-gray-500"
@@ -237,7 +262,7 @@ const CalendarSelector = ({
               )}
             </span>
           </div>
-          
+
           <ChevronDown className={cn(
             "w-4 h-4 text-gray-400 transition-transform",
             isOpen && "transform rotate-180"

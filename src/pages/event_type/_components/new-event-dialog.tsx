@@ -33,6 +33,8 @@ import { Loader } from "@/components/loader";
 // ✅ NUEVA IMPORTACIÓN - Calendar Selector
 import CalendarSelector from "@/components/calendar-selector";
 
+
+
 const NewEventDialog = (props: { btnVariant?: string }) => {
   const { btnVariant } = props;
 
@@ -52,6 +54,7 @@ const NewEventDialog = (props: { btnVariant?: string }) => {
   // ✅ NUEVO STATE - Calendar selection
   const [selectedCalendarId, setSelectedCalendarId] = useState<string>("");
   const [selectedCalendarName, setSelectedCalendarName] = useState<string>("");
+  
 
   // ✅ UPDATED SCHEMA - Incluyendo campos de calendario
   const eventSchema = z.object({
