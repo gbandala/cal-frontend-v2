@@ -135,11 +135,11 @@ const NewEventDialog = (props: { btnVariant?: string }) => {
     form.setValue("calendar_id", calendarId);
     form.setValue("calendar_name", calendarName);
     
-    console.log("📅 [CALENDAR_SELECTED] Calendar seleccionado", {
-      calendarId,
-      calendarName,
-      fallbackToPrimary: !calendarId
-    });
+    // console.log("📅 [CALENDAR_SELECTED] Calendar seleccionado", {
+    //   calendarId,
+    //   calendarName,
+    //   fallbackToPrimary: !calendarId
+    // });
   };
 
   // ✅ NUEVO HANDLER - Calendar error
@@ -149,15 +149,15 @@ const NewEventDialog = (props: { btnVariant?: string }) => {
   };
 
   const onSubmit = (data: EventFormData) => {
-    console.log("📝 [SUBMIT_EVENT] Datos del formulario:", {
-      ...data,
-      // Log específico para calendario
-      calendarInfo: {
-        id: data.calendar_id || "primary (fallback)",
-        name: data.calendar_name || "Calendario principal",
-        isSpecific: !!data.calendar_id
-      }
-    });
+    // console.log("📝 [SUBMIT_EVENT] Datos del formulario:", {
+    //   ...data,
+    //   // Log específico para calendario
+    //   calendarInfo: {
+    //     id: data.calendar_id || "primary (fallback)",
+    //     name: data.calendar_name || "Calendario principal",
+    //     isSpecific: !!data.calendar_id
+    //   }
+    // });
 
     mutate(
       {
@@ -212,7 +212,7 @@ const NewEventDialog = (props: { btnVariant?: string }) => {
           <span>New Event Type</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] !px-0 pb-0">
+      <DialogContent className="sm:max-w-[600px] !px-0 pb-0">
         <DialogHeader className="px-6">
           <DialogTitle className="text-xl">Add a new event type</DialogTitle>
           <DialogDescription>

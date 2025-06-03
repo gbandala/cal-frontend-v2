@@ -17,9 +17,9 @@ const Integrations = () => {
   const integrations = data?.integrations || [];
 
   // 🐛 DEBUG: Agregar logs para verificar la estructura de datos
-  console.log("🔍 [DEBUG] Raw data from API:", data);
-  console.log("🔍 [DEBUG] Processed integrations:", integrations);
-  console.log("🔍 [DEBUG] Integration count:", integrations.length);
+  // console.log("🔍 [DEBUG] Raw data from API:", data);
+  // console.log("🔍 [DEBUG] Processed integrations:", integrations);
+  // console.log("🔍 [DEBUG] Integration count:", integrations.length);
 
   return (
     <div className="flex flex-col !gap-5">
@@ -42,16 +42,16 @@ const Integrations = () => {
               {/* <div className="text-sm text-gray-500 mb-2">
                 Debug: Found {integrations.length} integrations
               </div> */}
-              
+
               <div className="space-y-4">
                 {integrations.length > 0 ? (
                   integrations.map((integration) => (
                     <IntegrationCard
                       key={integration.app_type}
                       isDisabled={
-                        integration.app_type === "GOOGLE_MEET_AND_CALENDAR"
-                          ? false
-                          : false
+                        integration.app_type === "ZOOM_MEETING" ||
+                        integration.app_type === "MICROSOFT_TEAMS" ||
+                        integration.app_type === "OUTLOOK_CALENDAR"
                       }
                       appType={integration.app_type}
                       title={integration.title}

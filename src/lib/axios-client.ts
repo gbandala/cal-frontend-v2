@@ -5,7 +5,7 @@ import { ENV } from "./get-env";
 
 // Obtiene la URL base de la API desde las variables de entorno
 const baseURL = ENV.VITE_API_BASE_URL;
-console.log("🌐 [CONFIG] Base URL configurada:", baseURL);
+// console.log("🌐 [CONFIG] Base URL configurada:", baseURL);
 
 // Configuración base para todas las instancias de Axios
 const options = {
@@ -14,23 +14,23 @@ const options = {
   timeout: 10000,            // Timeout de 10 segundos para las peticiones
 };
 
-console.log("⚙️ [CONFIG] Opciones de Axios:", options);
+// console.log("⚙️ [CONFIG] Opciones de Axios:", options);
 
 //*** INSTANCIA DE API PARA ENDPOINTS QUE REQUIEREN AUTENTICACIÓN */
 export const API = axios.create(options);
-console.log("🔐 [INIT] Instancia API autenticada creada");
+// console.log("🔐 [INIT] Instancia API autenticada creada");
 
 // Interceptor de REQUEST: Se ejecuta ANTES de enviar cada petición
 API.interceptors.request.use((config) => {
-  console.log("🚀 [API REQUEST]", {
-    method: config.method?.toUpperCase(),
-    url: config.url,
-    baseURL: config.baseURL,
-    fullURL: `${config.baseURL}${config.url}`,
-    data: config.data,
-    params: config.params,
-    headers: { ...config.headers } // Copia para no mutar el original
-  });
+  // console.log("🚀 [API REQUEST]", {
+  //   method: config.method?.toUpperCase(),
+  //   url: config.url,
+  //   baseURL: config.baseURL,
+  //   fullURL: `${config.baseURL}${config.url}`,
+  //   data: config.data,
+  //   params: config.params,
+  //   headers: { ...config.headers } // Copia para no mutar el original
+  // });
 
   // Obtiene el token de acceso del store global
   const accessToken = useStore.getState().accessToken;
@@ -38,7 +38,7 @@ API.interceptors.request.use((config) => {
   // Si existe un token, lo agrega al header Authorization
   if (accessToken) {
     config.headers["Authorization"] = "Bearer " + accessToken;
-    console.log("🔑 [TOKEN] Agregado al request:", accessToken.substring(0, 10) + "...");
+    // console.log("🔑 [TOKEN] Agregado al request:", accessToken.substring(0, 10) + "...");
   } else {
     console.log("⚠️ [TOKEN] No se encontró token de acceso");
   }
@@ -51,16 +51,16 @@ API.interceptors.request.use((config) => {
 API.interceptors.response.use(
   // Caso exitoso: simplemente retorna la respuesta
   (response) => {
-    console.log("✅ [API RESPONSE SUCCESS]", {
-      status: response.status,
-      statusText: response.statusText,
-      url: response.config.url,
-      method: response.config.method?.toUpperCase(),
-      data: response.data,
-      headers: response.headers,
-      // duration: response.config.metadata?.requestStartedAt ? 
-      //   Date.now() - response.config.maxBodyLength..metadata.requestStartedAt + "ms" : "unknown"
-    });
+    // console.log("✅ [API RESPONSE SUCCESS]", {
+    //   status: response.status,
+    //   statusText: response.statusText,
+    //   url: response.config.url,
+    //   method: response.config.method?.toUpperCase(),
+    //   data: response.data,
+    //   headers: response.headers,
+    //   // duration: response.config.metadata?.requestStartedAt ? 
+    //   //   Date.now() - response.config.maxBodyLength..metadata.requestStartedAt + "ms" : "unknown"
+    // });
     return response;
   },
   
@@ -114,19 +114,19 @@ API.interceptors.response.use(
 
 //*** INSTANCIA DE API PARA ENDPOINTS PÚBLICOS (SIN AUTENTICACIÓN) */
 export const PublicAPI = axios.create(options);
-console.log("🌍 [INIT] Instancia PublicAPI creada");
+// console.log("🌍 [INIT] Instancia PublicAPI creada");
 
 // Interceptor de REQUEST para PublicAPI (opcional - solo para logging)
 PublicAPI.interceptors.request.use((config) => {
-  console.log("🚀 [PUBLIC API REQUEST]", {
-    method: config.method?.toUpperCase(),
-    url: config.url,
-    baseURL: config.baseURL,
-    fullURL: `${config.baseURL}${config.url}`,
-    data: config.data,
-    params: config.params,
-    headers: { ...config.headers }
-  });
+  // console.log("🚀 [PUBLIC API REQUEST]", {
+  //   method: config.method?.toUpperCase(),
+  //   url: config.url,
+  //   baseURL: config.baseURL,
+  //   fullURL: `${config.baseURL}${config.url}`,
+  //   data: config.data,
+  //   params: config.params,
+  //   headers: { ...config.headers }
+  // });
   return config;
 });
 
@@ -135,14 +135,14 @@ PublicAPI.interceptors.request.use((config) => {
 PublicAPI.interceptors.response.use(
   // Caso exitoso: retorna la respuesta tal como viene
   (response) => {
-    console.log("✅ [PUBLIC API RESPONSE SUCCESS]", {
-      status: response.status,
-      statusText: response.statusText,
-      url: response.config.url,
-      method: response.config.method?.toUpperCase(),
-      data: response.data,
-      headers: response.headers
-    });
+    // console.log("✅ [PUBLIC API RESPONSE SUCCESS]", {
+    //   status: response.status,
+    //   statusText: response.statusText,
+    //   url: response.config.url,
+    //   method: response.config.method?.toUpperCase(),
+    //   data: response.data,
+    //   headers: response.headers
+    // });
     return response;
   },
   

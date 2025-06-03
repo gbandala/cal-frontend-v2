@@ -44,34 +44,24 @@ import {
 interface CalendarSelectorProps {
   /** Valor seleccionado actualmente (calendar_id) */
   value?: string;
-
   /** Callback cuando cambia la selección */
   onChange: (calendarId: string, calendarName: string) => void;
-
   /** Placeholder para el dropdown */
   placeholder?: string;
-
   /** Solo mostrar calendarios con permisos de escritura */
   onlyWritable?: boolean;
-
   /** Solo mostrar calendarios activos */
   onlyActive?: boolean;
-
   /** Permitir selección vacía */
   allowEmpty?: boolean;
-
   /** Texto para opción vacía */
   emptyLabel?: string;
-
   /** Si está deshabilitado */
   disabled?: boolean;
-
   /** Clase CSS adicional */
   className?: string;
-
   /** Mostrar botón de sincronización manual */
   showSyncButton?: boolean;
-
   /** Callback para errores */
   onError?: (error: unknown) => void;
 }
@@ -123,17 +113,9 @@ const CalendarSelector = ({
       queryOptions
     ) : [];
 
-  console.log('🔍 [CALENDAR] Filtered calendars:', calendars);
-  console.log('🔍 [CALENDAR] Calendar count:', calendars.length);
-  console.log('🔍 [CALENDAR] Query options:', queryOptions);
-  console.log('🔍 [CALENDAR] Raw API response:', calendarsResponse?.data?.[0]);
-  //   console.log('🔍 [CALENDAR_SELECTOR] Response structure:', {
-  //   full: calendarsResponse,
-  //   data: calendarsResponse?.data,
-  //   // responseData: calendarsResponse?.responseData,
-  //   // calendarsInData: calendarsResponse?.data?.data,
-  //   // calendarsInResponseData: calendarsResponse?.responseData?.data
-  // });
+  // console.log('🔍 [CALENDAR] Filtered calendars:', calendars);
+
+
   // Auto-seleccionar calendario por defecto
   useEffect(() => {
     if (!value && calendars.length > 0 && !allowEmpty) {

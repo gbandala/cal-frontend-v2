@@ -91,7 +91,7 @@ const WeeklyHoursRow = ({
   // console.log(form.getValues(), "val");
 
   const onSubmit = (values: WeeklyHoursFormData) => {
-    console.log("Form Data:", values);
+    // console.log("Form Data:", values);
     if (isPending) return;
 
     mutate(values, {

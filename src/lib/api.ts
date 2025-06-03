@@ -76,26 +76,26 @@ import {
 export const loginMutationFn = async (
   data: loginType
 ): Promise<LoginResponseType> => {
-  console.log("🔐 [LOGIN] Iniciando proceso de login", {
-    endpoint: "/auth/login",
-    inputData: { 
-      ...data, 
-      password: "***HIDDEN***" // Ocultar password por seguridad
-    }
-  });
+  // console.log("🔐 [LOGIN] Iniciando proceso de login", {
+  //   endpoint: "/auth/login",
+  //   inputData: { 
+  //     ...data, 
+  //     password: "***HIDDEN***" // Ocultar password por seguridad
+  //   }
+  // });
 
   try {
     const response = await API.post("/auth/login", data);
     
-    console.log("✅ [LOGIN] Login exitoso", {
-      status: response.status,
-      hasToken: !!response.data.accessToken,
-      userData: {
-        ...response.data,
-        accessToken: response.data.accessToken ? 
-          response.data.accessToken.substring(0, 10) + "..." : "N/A"
-      }
-    });
+    // console.log("✅ [LOGIN] Login exitoso", {
+    //   status: response.status,
+    //   hasToken: !!response.data.accessToken,
+    //   userData: {
+    //     ...response.data,
+    //     accessToken: response.data.accessToken ? 
+    //       response.data.accessToken.substring(0, 10) + "..." : "N/A"
+    //   }
+    // });
     
     return response.data;
   } catch (error) {
@@ -124,21 +124,21 @@ export const loginMutationFn = async (
  * NOTA: También oculta el password en logs por seguridad
  */
 export const registerMutationFn = async (data: registerType) => {
-  console.log("👤 [REGISTER] Iniciando registro de usuario", {
-    endpoint: "/auth/register",
-    inputData: {
-      ...data,
-      password: "***HIDDEN***"
-    }
-  });
+  // console.log("👤 [REGISTER] Iniciando registro de usuario", {
+  //   endpoint: "/auth/register",
+  //   inputData: {
+  //     ...data,
+  //     password: "***HIDDEN***"
+  //   }
+  // });
 
   try {
     const response = await API.post("/auth/register", data);
     
-    console.log("✅ [REGISTER] Registro exitoso", {
-      status: response.status,
-      responseData: response.data
-    });
+    // console.log("✅ [REGISTER] Registro exitoso", {
+    //   status: response.status,
+    //   responseData: response.data
+    // });
     
     return response.data;
   } catch (error) {
@@ -185,18 +185,18 @@ export const registerMutationFn = async (data: registerType) => {
  * 3. El evento queda disponible para que otros lo agenden
  */
 export const CreateEventMutationFn = async (data: CreateEventPayloadType) => {
-  console.log("📅 [CREATE_EVENT] Creando nuevo evento", {
-    endpoint: "/event/create",
-    inputData: data
-  });
+  // console.log("📅 [CREATE_EVENT] Creando nuevo evento", {
+  //   endpoint: "/event/create",
+  //   inputData: data
+  // });
 
   try {
     const response = await API.post("/event/create", data);
     
-    console.log("✅ [CREATE_EVENT] Evento creado exitosamente", {
-      status: response.status,
-      responseData: response.data
-    });
+    // console.log("✅ [CREATE_EVENT] Evento creado exitosamente", {
+    //   status: response.status,
+    //   responseData: response.data
+    // });
     
     return response.data;
   } catch (error) {
@@ -229,19 +229,19 @@ export const CreateEventMutationFn = async (data: CreateEventPayloadType) => {
 export const toggleEventVisibilityMutationFn = async (data: {
   eventId: string;
 }): Promise<ToggleEventVisibilityResponseType> => {
-  console.log("👁️ [TOGGLE_VISIBILITY] Cambiando visibilidad del evento", {
-    endpoint: "/event/toggle-privacy",
-    inputData: data
-  });
+  // console.log("👁️ [TOGGLE_VISIBILITY] Cambiando visibilidad del evento", {
+  //   endpoint: "/event/toggle-privacy",
+  //   inputData: data
+  // });
 
   try {
     const response = await API.put("/event/toggle-privacy", data);
     
-    console.log("✅ [TOGGLE_VISIBILITY] Visibilidad actualizada", {
-      status: response.status,
-      eventId: data.eventId,
-      responseData: response.data
-    });
+    // console.log("✅ [TOGGLE_VISIBILITY] Visibilidad actualizada", {
+    //   status: response.status,
+    //   eventId: data.eventId,
+    //   responseData: response.data
+    // });
     
     return response.data;
   } catch (error) {
@@ -274,18 +274,18 @@ export const toggleEventVisibilityMutationFn = async (data: {
  * - Mostrar estadísticas (cuántos eventos tiene)
  */
 export const geteventListQueryFn = async (): Promise<UserEventListResponse> => {
-  console.log("📋 [GET_EVENTS] Obteniendo lista de eventos del usuario", {
-    endpoint: "/event/all"
-  });
+  // console.log("📋 [GET_EVENTS] Obteniendo lista de eventos del usuario", {
+  //   endpoint: "/event/all"
+  // });
 
   try {
     const response = await API.get(`/event/all`);
     
-    console.log("✅ [GET_EVENTS] Lista de eventos obtenida", {
-      status: response.status,
-      eventCount: response.data.events?.length || 0,
-      responseData: response.data
-    });
+    // console.log("✅ [GET_EVENTS] Lista de eventos obtenida", {
+    //   status: response.status,
+    //   eventCount: response.data.events?.length || 0,
+    //   responseData: response.data
+    // });
     
     return response.data;
   } catch (error) {
@@ -330,20 +330,20 @@ export const geteventListQueryFn = async (): Promise<UserEventListResponse> => {
 export const checkIntegrationQueryFn = async (
   appType: VideoConferencingPlatform
 ) => {
-  console.log("🔗 [CHECK_INTEGRATION] Verificando integración", {
-    endpoint: `integration/check/${appType}`,
-    appType
-  });
+  // console.log("🔗 [CHECK_INTEGRATION] Verificando integración", {
+  //   endpoint: `integration/check/${appType}`,
+  //   appType
+  // });
 
   try {
     const response = await API.get(`integration/check/${appType}`);
     
-    console.log("✅ [CHECK_INTEGRATION] Estado de integración obtenido", {
-      status: response.status,
-      appType,
-      isConnected: response.data.isConnected,
-      responseData: response.data
-    });
+    // console.log("✅ [CHECK_INTEGRATION] Estado de integración obtenido", {
+    //   status: response.status,
+    //   appType,
+    //   isConnected: response.data.isConnected,
+    //   responseData: response.data
+    // });
     
     return response.data;
   } catch (error) {
@@ -378,18 +378,18 @@ export const checkIntegrationQueryFn = async (
  */
 export const getAllIntegrationQueryFn =
   async (): Promise<GetAllIntegrationResponseType> => {
-    console.log("🔗 [GET_ALL_INTEGRATIONS] Obteniendo todas las integraciones", {
-      endpoint: "integration/all"
-    });
+    // console.log("🔗 [GET_ALL_INTEGRATIONS] Obteniendo todas las integraciones", {
+    //   endpoint: "integration/all"
+    // });
 
     try {
       const response = await API.get(`integration/all`);
       
-      console.log("✅ [GET_ALL_INTEGRATIONS] Integraciones obtenidas", {
-        status: response.status,
-        integrationCount: response.data.integrations?.length || 0,
-        responseData: response.data
-      });
+      // console.log("✅ [GET_ALL_INTEGRATIONS] Integraciones obtenidas", {
+      //   status: response.status,
+      //   integrationCount: response.data.integrations?.length || 0,
+      //   responseData: response.data
+      // });
       
       return response.data;
     } catch (error) {
@@ -421,19 +421,19 @@ export const getAllIntegrationQueryFn =
 export const connectAppIntegrationQueryFn = async (
   appType: IntegrationAppType
 ) => {
-  console.log("🔌 [CONNECT_INTEGRATION] Conectando integración", {
-    endpoint: `integration/connect/${appType}`,
-    appType
-  });
+  // console.log("🔌 [CONNECT_INTEGRATION] Conectando integración", {
+  //   endpoint: `integration/connect/${appType}`,
+  //   appType
+  // });
 
   try {
     const response = await API.get(`integration/connect/${appType}`);
     
-    console.log("✅ [CONNECT_INTEGRATION] Integración conectada", {
-      status: response.status,
-      appType,
-      responseData: response.data
-    });
+    // console.log("✅ [CONNECT_INTEGRATION] Integración conectada", {
+    //   status: response.status,
+    //   appType,
+    //   responseData: response.data
+    // });
     
     return response.data;
   } catch (error) {
@@ -449,18 +449,18 @@ export const connectAppIntegrationQueryFn = async (
 
 export const getUserAvailabilityQueryFn =
   async (): Promise<UserAvailabilityResponseType> => {
-    console.log("⏰ [GET_AVAILABILITY] Obteniendo disponibilidad del usuario", {
-      endpoint: "/availability/me"
-    });
+    // console.log("⏰ [GET_AVAILABILITY] Obteniendo disponibilidad del usuario", {
+    //   endpoint: "/availability/me"
+    // });
 
     try {
       const response = await API.get(`/availability/me`);
       
-      console.log("✅ [GET_AVAILABILITY] Disponibilidad obtenida", {
-        status: response.status,
-        hasSchedule: !!response.data.schedule,
-        responseData: response.data.availability
-      });
+      // console.log("✅ [GET_AVAILABILITY] Disponibilidad obtenida", {
+      //   status: response.status,
+      //   hasSchedule: !!response.data.schedule,
+      //   responseData: response.data.availability
+      // });
       
       return response.data;
     } catch (error) {
@@ -474,10 +474,10 @@ export const getUserAvailabilityQueryFn =
 export const updateUserAvailabilityMutationFn = async (
   data: AvailabilityType
 ) => {
-  console.log("⏰ [UPDATE_AVAILABILITY] Actualizando disponibilidad", {
-    endpoint: "/availability/update",
-    inputData: data
-  });
+  // console.log("⏰ [UPDATE_AVAILABILITY] Actualizando disponibilidad", {
+  //   endpoint: "/availability/update",
+  //   inputData: data
+  // });
 
   try {
     const response = await API.put("/availability/update", data);
@@ -502,22 +502,22 @@ export const updateUserAvailabilityMutationFn = async (
 export const getUserMeetingsQueryFn = async (
   filter: PeriodType
 ): Promise<UserMeetingsResponseType> => {
-  console.log("📅 [GET_MEETINGS] Obteniendo reuniones del usuario", {
-    endpoint: `/meeting/user/all${filter ? `?filter=${filter}` : ""}`,
-    filter
-  });
+  // console.log("📅 [GET_MEETINGS] Obteniendo reuniones del usuario", {
+  //   endpoint: `/meeting/user/all${filter ? `?filter=${filter}` : ""}`,
+  //   filter
+  // });
 
   try {
     const response = await API.get(
       `/meeting/user/all${filter ? `?filter=${filter}` : ""}`
     );
     
-    console.log("✅ [GET_MEETINGS] Reuniones obtenidas", {
-      status: response.status,
-      filter,
-      meetingCount: response.data.meetings?.length || 0,
-      responseData: response.data
-    });
+    // console.log("✅ [GET_MEETINGS] Reuniones obtenidas", {
+    //   status: response.status,
+    //   filter,
+    //   meetingCount: response.data.meetings?.length || 0,
+    //   responseData: response.data
+    // });
     
     return response.data;
   } catch (error) {
@@ -538,11 +538,11 @@ export const cancelMeetingMutationFn = async (meetingId: string) => {
   try {
     const response = await API.put(`/meeting/cancel/${meetingId}`, {});
     
-    console.log("✅ [CANCEL_MEETING] Reunión cancelada exitosamente", {
-      status: response.status,
-      meetingId,
-      responseData: response.data
-    });
+    // console.log("✅ [CANCEL_MEETING] Reunión cancelada exitosamente", {
+    //   status: response.status,
+    //   meetingId,
+    //   responseData: response.data
+    // });
     
     return response.data;
   } catch (error) {
@@ -559,20 +559,20 @@ export const cancelMeetingMutationFn = async (meetingId: string) => {
 export const getAllPublicEventQueryFn = async (
   username: string
 ): Promise<PublicEventResponseType> => {
-  console.log("🌍 [GET_PUBLIC_EVENTS] Obteniendo eventos públicos", {
-    endpoint: `/event/public/${username}`,
-    username
-  });
+  // console.log("🌍 [GET_PUBLIC_EVENTS] Obteniendo eventos públicos", {
+  //   endpoint: `/event/public/${username}`,
+  //   username
+  // });
 
   try {
     const response = await PublicAPI.get(`/event/public/${username}`);
     
-    console.log("✅ [GET_PUBLIC_EVENTS] Eventos públicos obtenidos", {
-      status: response.status,
-      username,
-      eventCount: response.data.events?.length || 0,
-      responseData: response.data
-    });
+    // console.log("✅ [GET_PUBLIC_EVENTS] Eventos públicos obtenidos", {
+    //   status: response.status,
+    //   username,
+    //   eventCount: response.data.events?.length || 0,
+    //   responseData: response.data
+    // });
     
     return response.data;
   } catch (error) {
@@ -598,13 +598,13 @@ export const getSinglePublicEventBySlugQueryFn = async (data: {
       `/event/public/${data.username}/${data.slug}`
     );
     
-    console.log("✅ [GET_PUBLIC_EVENT_DETAIL] Detalle de evento obtenido", {
-      status: response.status,
-      username: data.username,
-      slug: data.slug,
-      eventTitle: response.data.event?.title || "N/A",
-      responseData: response.data
-    });
+    // console.log("✅ [GET_PUBLIC_EVENT_DETAIL] Detalle de evento obtenido", {
+    //   status: response.status,
+    //   username: data.username,
+    //   slug: data.slug,
+    //   eventTitle: response.data.event?.title || "N/A",
+    //   responseData: response.data
+    // });
     
     return response.data;
   } catch (error) {
@@ -620,24 +620,24 @@ export const getPublicAvailabilityByEventIdQueryFn = async (
   eventId: string,
   timezone?: string
 ): Promise<PublicAvailabilityEventResponseType> => {
-  console.log("🌍 [GET_PUBLIC_AVAILABILITY] Obteniendo disponibilidad pública", {
-    endpoint: `/availability/public/${eventId}${timezone ? `?timezone=${timezone}` : ""}`,
-    eventId,
-    timezone
-  });
+  // console.log("🌍 [GET_PUBLIC_AVAILABILITY] Obteniendo disponibilidad pública", {
+  //   endpoint: `/availability/public/${eventId}${timezone ? `?timezone=${timezone}` : ""}`,
+  //   eventId,
+  //   timezone
+  // });
 
   try {
     const response = await PublicAPI.get(
       `/availability/public/${eventId}${timezone ? `?timezone=${timezone}` : ""}`
     );
     
-    console.log("✅ [GET_PUBLIC_AVAILABILITY] Disponibilidad obtenida", {
-      status: response.status,
-      eventId,
-      timezone,
-      availableSlots: response.data.availableSlots?.length || 0,
-      responseData: response.data
-    });
+    // console.log("✅ [GET_PUBLIC_AVAILABILITY] Disponibilidad obtenida", {
+    //   status: response.status,
+    //   eventId,
+    //   timezone,
+    //   availableSlots: response.data.availableSlots?.length || 0,
+    //   responseData: response.data
+    // });
     
     return response.data;
   } catch (error) {
@@ -651,24 +651,24 @@ export const getPublicAvailabilityByEventIdQueryFn = async (
 };
 
 export const scheduleMeetingMutationFn = async (data: CreateMeetingType) => {
-  console.log("📅 [SCHEDULE_MEETING] Programando nueva reunión", {
-    endpoint: "/meeting/public/create",
-    inputData: {
-      ...data,
-      // Ocultar información sensible si existe
-      eventId: data.eventId
-    }
-  });
+  // console.log("📅 [SCHEDULE_MEETING] Programando nueva reunión", {
+  //   endpoint: "/meeting/public/create",
+  //   inputData: {
+  //     ...data,
+  //     // Ocultar información sensible si existe
+  //     eventId: data.eventId
+  //   }
+  // });
 
   try {
     const response = await API.post("/meeting/public/create", data);
     
-    console.log("✅ [SCHEDULE_MEETING] Reunión programada exitosamente", {
-      status: response.status,
-      meetingId: response.data.meeting?.id || "N/A",
-      eventId: data.eventId,
-      responseData: response.data
-    });
+    // console.log("✅ [SCHEDULE_MEETING] Reunión programada exitosamente", {
+    //   status: response.status,
+    //   meetingId: response.data.meeting?.id || "N/A",
+    //   eventId: data.eventId,
+    //   responseData: response.data
+    // });
     
     return response.data;
   } catch (error) {
@@ -744,22 +744,22 @@ export const getCalendarsQueryFn = async (
   // const queryString = params.toString();
   const endpoint = `/calendars`;
 
-  console.log("📅 [GET_CALENDARS] Obteniendo lista de calendarios", {
-    endpoint,
-    options,
-    // queryString
-  });
+  // console.log("📅 [GET_CALENDARS] Obteniendo lista de calendarios", {
+  //   endpoint,
+  //   options,
+  //   // queryString
+  // });
 
   try {
     const response = await API.get(endpoint);
     
-    console.log("✅ [GET_CALENDARS] Lista de calendarios obtenida", {
-      status: response.status,
-      calendarCount: response.data.data?.length || 0,
-      writableCalendars: response.data.data?.filter((cal: { isWritable: boolean }) => cal.isWritable)?.length || 0,
-      primaryCalendar: response.data.data?.find((cal: { isPrimary: boolean; name: string }) => cal.isPrimary)?.name || "N/A",
-      responseData: response.data
-    });
+    // console.log("✅ [GET_CALENDARS] Lista de calendarios obtenida", {
+    //   status: response.status,
+    //   calendarCount: response.data.data?.length || 0,
+    //   writableCalendars: response.data.data?.filter((cal: { isWritable: boolean }) => cal.isWritable)?.length || 0,
+    //   primaryCalendar: response.data.data?.find((cal: { isPrimary: boolean; name: string }) => cal.isPrimary)?.name || "N/A",
+    //   responseData: response.data
+    // });
     
     return response.data;
   } catch (error) {
@@ -810,11 +810,11 @@ export const getCalendarsQueryFn = async (
 export const syncCalendarsQueryFn = async (
   payload: CalendarSyncPayload = { forceRefresh: false }
 ): Promise<CalendarSyncResponse> => {
-  console.log("🔄 [SYNC_CALENDARS] Sincronizando calendarios desde Google", {
-    endpoint: "/calendars/sync",
-    payload,
-    syncType: payload.forceRefresh ? "FULL_REFRESH" : "INCREMENTAL"
-  });
+  // console.log("🔄 [SYNC_CALENDARS] Sincronizando calendarios desde Google", {
+  //   endpoint: "/calendars/sync",
+  //   payload,
+  //   syncType: payload.forceRefresh ? "FULL_REFRESH" : "INCREMENTAL"
+  // });
 
   try {
     const response = await API.post("/calendars/sync", payload);
@@ -866,24 +866,24 @@ export const syncCalendarsQueryFn = async (
 export const getCalendarDetailsQueryFn = async (
   calendarId: string
 ): Promise<CalendarDetailResponse> => {
-  console.log("🔍 [GET_CALENDAR_DETAILS] Obteniendo detalles de calendario", {
-    endpoint: `/calendars/${calendarId}`,
-    calendarId,
-    isSpecialCalendar: calendarId === "primary"
-  });
+  // console.log("🔍 [GET_CALENDAR_DETAILS] Obteniendo detalles de calendario", {
+  //   endpoint: `/calendars/${calendarId}`,
+  //   calendarId,
+  //   isSpecialCalendar: calendarId === "primary"
+  // });
 
   try {
     const response = await API.get(`/calendars/${calendarId}`);
     
-    console.log("✅ [GET_CALENDAR_DETAILS] Detalles obtenidos", {
-      status: response.status,
-      calendarId,
-      calendarName: response.data.data?.name || "N/A",
-      isPrimary: response.data.data?.isPrimary || false,
-      isWritable: response.data.data?.isWritable || false,
-      accessRole: response.data.data?.accessRole || "N/A",
-      responseData: response.data
-    });
+    // console.log("✅ [GET_CALENDAR_DETAILS] Detalles obtenidos", {
+    //   status: response.status,
+    //   calendarId,
+    //   calendarName: response.data.data?.name || "N/A",
+    //   isPrimary: response.data.data?.isPrimary || false,
+    //   isWritable: response.data.data?.isWritable || false,
+    //   accessRole: response.data.data?.accessRole || "N/A",
+    //   responseData: response.data
+    // });
     
     return response.data;
   } catch (error) {
@@ -911,20 +911,20 @@ export const getCalendarDetailsQueryFn = async (
  * - Uso de cada calendario (eventos creados)
  */
 export const getCalendarStatsQueryFn = async () => {
-  console.log("📊 [GET_CALENDAR_STATS] Obteniendo estadísticas de calendarios", {
-    endpoint: "/calendars/stats"
-  });
+  // console.log("📊 [GET_CALENDAR_STATS] Obteniendo estadísticas de calendarios", {
+  //   endpoint: "/calendars/stats"
+  // });
 
   try {
     const response = await API.get("/calendars/stats");
     
-    console.log("✅ [GET_CALENDAR_STATS] Estadísticas obtenidas", {
-      status: response.status,
-      totalCalendars: response.data.data?.total || 0,
-      activeCalendars: response.data.data?.active || 0,
-      writableCalendars: response.data.data?.writable || 0,
-      responseData: response.data
-    });
+    // console.log("✅ [GET_CALENDAR_STATS] Estadísticas obtenidas", {
+    //   status: response.status,
+    //   totalCalendars: response.data.data?.total || 0,
+    //   activeCalendars: response.data.data?.active || 0,
+    //   writableCalendars: response.data.data?.writable || 0,
+    //   responseData: response.data
+    // });
     
     return response.data;
   } catch (error) {

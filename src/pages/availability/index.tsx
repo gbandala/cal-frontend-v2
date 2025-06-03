@@ -19,15 +19,15 @@ const Availability = () => {
     if (!data) return { days: [], timeGap: 30 };
 
     // 🐛 DEBUG: Mostrar estructura real de datos
-    console.log("🔍 [DEBUG] Raw data from API:", data);
-    console.log("🔍 [DEBUG] Data keys:", data ? Object.keys(data) : "no data");
+    // console.log("🔍 [DEBUG] Raw data from API:", data);
+    // console.log("🔍 [DEBUG] Data keys:", data ? Object.keys(data) : "no data");
 
     // ✅ CORRECCIÓN: Los datos están en data.availability directamente
     if (data.availability?.days && Array.isArray(data.availability.days)) {
-      console.log("✅ [DEBUG] Found availability data:", {
-        daysCount: data.availability.days.length,
-        timeGap: data.availability.timeGap
-      });
+      // console.log("✅ [DEBUG] Found availability data:", {
+      //   daysCount: data.availability.days.length,
+      //   timeGap: data.availability.timeGap
+      // });
       
       return {
         days: data.availability.days,
