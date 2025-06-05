@@ -281,11 +281,11 @@ export const geteventListQueryFn = async (): Promise<UserEventListResponse> => {
   try {
     const response = await API.get(`/event/all`);
     
-    // console.log("✅ [GET_EVENTS] Lista de eventos obtenida", {
-    //   status: response.status,
-    //   eventCount: response.data.events?.length || 0,
-    //   responseData: response.data
-    // });
+    console.log("✅ [GET_EVENTS] Lista de eventos obtenida", {
+      status: response.status,
+      eventCount: response.data.events?.length || 0,
+      responseData: response.data
+    });
     
     return response.data;
   } catch (error) {
@@ -512,12 +512,12 @@ export const getUserMeetingsQueryFn = async (
       `/meeting/user/all${filter ? `?filter=${filter}` : ""}`
     );
     
-    // console.log("✅ [GET_MEETINGS] Reuniones obtenidas", {
-    //   status: response.status,
-    //   filter,
-    //   meetingCount: response.data.meetings?.length || 0,
-    //   responseData: response.data
-    // });
+    console.log("✅ [GET_MEETINGS] Reuniones obtenidas", {
+      status: response.status,
+      filter,
+      meetingCount: response.data.meetings?.length || 0,
+      responseData: response.data
+    });
     
     return response.data;
   } catch (error) {
@@ -567,12 +567,12 @@ export const getAllPublicEventQueryFn = async (
   try {
     const response = await PublicAPI.get(`/event/public/${username}`);
     
-    // console.log("✅ [GET_PUBLIC_EVENTS] Eventos públicos obtenidos", {
-    //   status: response.status,
-    //   username,
-    //   eventCount: response.data.events?.length || 0,
-    //   responseData: response.data
-    // });
+    console.log("✅ [GET_PUBLIC_EVENTS] Eventos públicos obtenidos", {
+      status: response.status,
+      username,
+      eventCount: response.data.events?.length || 0,
+      responseData: response.data
+    });
     
     return response.data;
   } catch (error) {
@@ -588,23 +588,23 @@ export const getSinglePublicEventBySlugQueryFn = async (data: {
   username: string;
   slug: string;
 }): Promise<PublicSingleEventDetailResponseType> => {
-  console.log("🌍 [GET_PUBLIC_EVENT_DETAIL] Obteniendo detalle de evento público", {
-    endpoint: `/event/public/${data.username}/${data.slug}`,
-    inputData: data
-  });
+  // console.log("🌍 [GET_PUBLIC_EVENT_DETAIL] Obteniendo detalle de evento público", {
+  //   endpoint: `/event/public/${data.username}/${data.slug}`,
+  //   inputData: data
+  // });
 
   try {
     const response = await PublicAPI.get(
       `/event/public/${data.username}/${data.slug}`
     );
     
-    // console.log("✅ [GET_PUBLIC_EVENT_DETAIL] Detalle de evento obtenido", {
-    //   status: response.status,
-    //   username: data.username,
-    //   slug: data.slug,
-    //   eventTitle: response.data.event?.title || "N/A",
-    //   responseData: response.data
-    // });
+    console.log("✅ [GET_PUBLIC_EVENT_DETAIL] Detalle de evento obtenido", {
+      status: response.status,
+      username: data.username,
+      slug: data.slug,
+      eventTitle: response.data.event?.title || "N/A",
+      responseData: response.data
+    });
     
     return response.data;
   } catch (error) {
@@ -631,13 +631,13 @@ export const getPublicAvailabilityByEventIdQueryFn = async (
       `/availability/public/${eventId}${timezone ? `?timezone=${timezone}` : ""}`
     );
     
-    // console.log("✅ [GET_PUBLIC_AVAILABILITY] Disponibilidad obtenida", {
-    //   status: response.status,
-    //   eventId,
-    //   timezone,
-    //   availableSlots: response.data.availableSlots?.length || 0,
-    //   responseData: response.data
-    // });
+    console.log("✅ [GET_PUBLIC_AVAILABILITY] Disponibilidad obtenida", {
+      status: response.status,
+      eventId,
+      timezone,
+      availableSlots: response.data.availableSlots?.length || 0,
+      responseData: response.data
+    });
     
     return response.data;
   } catch (error) {
@@ -663,12 +663,12 @@ export const scheduleMeetingMutationFn = async (data: CreateMeetingType) => {
   try {
     const response = await API.post("/meeting/public/create", data);
     
-    // console.log("✅ [SCHEDULE_MEETING] Reunión programada exitosamente", {
-    //   status: response.status,
-    //   meetingId: response.data.meeting?.id || "N/A",
-    //   eventId: data.eventId,
-    //   responseData: response.data
-    // });
+    console.log("✅ [SCHEDULE_MEETING] Reunión programada exitosamente", {
+      status: response.status,
+      meetingId: response.data.meeting?.id || "N/A",
+      eventId: data.eventId,
+      responseData: response.data
+    });
     
     return response.data;
   } catch (error) {
