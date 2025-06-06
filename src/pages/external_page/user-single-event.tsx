@@ -11,13 +11,25 @@ import { getSinglePublicEventBySlugQueryFn } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { ErrorAlert } from "@/components/ErrorAlert";
 import { Loader } from "@/components/loader";
+import { useEffect } from "react";
 
 const UserSingleEventPage = () => {
   const param = useParams();
   const username = param.username as string;
   const slug = param.slug as string;
 
-  const { next, timezone, selectedDate } = useBookingState();
+  const { next, timezone, selectedDate, setTimezone } = useBookingState();
+
+  useEffect(() => {
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    // Solo actualizamos si es diferente para evitar re-renders innecesarios
+    if (userTimezone && userTimezone !== timezone) {
+      setTimezone(userTimezone);
+      console.log(`🌐 Zona horaria detectada automáticamente: ${userTimezone}`);
+    }
+  }, []);
+
+  
 
   const { data, isFetching, isLoading, isError, error } = useQuery({
     queryKey: ["public_single_event"],

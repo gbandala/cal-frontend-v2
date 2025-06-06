@@ -4,6 +4,9 @@ import { parse } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 
 export const useBookingState = () => {
+
+
+  
   const [selectedDate, setSelectedDate] = useQueryState<CalendarDate>("date", {
     parse: (value) =>
       new CalendarDate(
@@ -24,6 +27,7 @@ export const useBookingState = () => {
     defaultValue: getLocalTimeZone(), // Default to user's system timezone
   });
 
+  
   const [hourType, setHourType] = useQueryState<"12h" | "24h">("hourType", {
     defaultValue: "24h",
     parse: (value) => (value === "12h" ? "12h" : "24h"),

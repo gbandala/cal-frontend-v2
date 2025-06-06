@@ -39,10 +39,10 @@ import {
 } from "@/types/api.type";
 import { API, PublicAPI } from "./axios-client";
 import { IntegrationAppType, VideoConferencingPlatform } from "./types";
-import { 
-  CalendarListResponse, 
-  CalendarSyncResponse, 
-  CalendarDetailResponse, 
+import {
+  CalendarListResponse,
+  CalendarSyncResponse,
+  CalendarDetailResponse,
   CalendarQueryOptions,
   CalendarSyncPayload
 } from "@/types/calendar.type";
@@ -86,7 +86,7 @@ export const loginMutationFn = async (
 
   try {
     const response = await API.post("/auth/login", data);
-    
+
     // console.log("✅ [LOGIN] Login exitoso", {
     //   status: response.status,
     //   hasToken: !!response.data.accessToken,
@@ -96,7 +96,7 @@ export const loginMutationFn = async (
     //       response.data.accessToken.substring(0, 10) + "..." : "N/A"
     //   }
     // });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [LOGIN] Error en login", {
@@ -134,12 +134,12 @@ export const registerMutationFn = async (data: registerType) => {
 
   try {
     const response = await API.post("/auth/register", data);
-    
+
     // console.log("✅ [REGISTER] Registro exitoso", {
     //   status: response.status,
     //   responseData: response.data
     // });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [REGISTER] Error en registro", {
@@ -192,12 +192,12 @@ export const CreateEventMutationFn = async (data: CreateEventPayloadType) => {
 
   try {
     const response = await API.post("/event/create", data);
-    
+
     // console.log("✅ [CREATE_EVENT] Evento creado exitosamente", {
     //   status: response.status,
     //   responseData: response.data
     // });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [CREATE_EVENT] Error al crear evento", {
@@ -236,13 +236,13 @@ export const toggleEventVisibilityMutationFn = async (data: {
 
   try {
     const response = await API.put("/event/toggle-privacy", data);
-    
+
     // console.log("✅ [TOGGLE_VISIBILITY] Visibilidad actualizada", {
     //   status: response.status,
     //   eventId: data.eventId,
     //   responseData: response.data
     // });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [TOGGLE_VISIBILITY] Error al cambiar visibilidad", {
@@ -280,13 +280,13 @@ export const geteventListQueryFn = async (): Promise<UserEventListResponse> => {
 
   try {
     const response = await API.get(`/event/all`);
-    
+
     console.log("✅ [GET_EVENTS] Lista de eventos obtenida", {
       status: response.status,
       eventCount: response.data.events?.length || 0,
       responseData: response.data
     });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [GET_EVENTS] Error al obtener eventos", {
@@ -337,14 +337,14 @@ export const checkIntegrationQueryFn = async (
 
   try {
     const response = await API.get(`integration/check/${appType}`);
-    
+
     // console.log("✅ [CHECK_INTEGRATION] Estado de integración obtenido", {
     //   status: response.status,
     //   appType,
     //   isConnected: response.data.isConnected,
     //   responseData: response.data
     // });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [CHECK_INTEGRATION] Error al verificar integración", {
@@ -384,13 +384,13 @@ export const getAllIntegrationQueryFn =
 
     try {
       const response = await API.get(`integration/all`);
-      
+
       // console.log("✅ [GET_ALL_INTEGRATIONS] Integraciones obtenidas", {
       //   status: response.status,
       //   integrationCount: response.data.integrations?.length || 0,
       //   responseData: response.data
       // });
-      
+
       return response.data;
     } catch (error) {
       console.log("❌ [GET_ALL_INTEGRATIONS] Error al obtener integraciones", {
@@ -428,13 +428,13 @@ export const connectAppIntegrationQueryFn = async (
 
   try {
     const response = await API.get(`integration/connect/${appType}`);
-    
+
     // console.log("✅ [CONNECT_INTEGRATION] Integración conectada", {
     //   status: response.status,
     //   appType,
     //   responseData: response.data
     // });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [CONNECT_INTEGRATION] Error al conectar integración", {
@@ -455,13 +455,13 @@ export const getUserAvailabilityQueryFn =
 
     try {
       const response = await API.get(`/availability/me`);
-      
+
       // console.log("✅ [GET_AVAILABILITY] Disponibilidad obtenida", {
       //   status: response.status,
       //   hasSchedule: !!response.data.schedule,
       //   responseData: response.data.availability
       // });
-      
+
       return response.data;
     } catch (error) {
       console.log("❌ [GET_AVAILABILITY] Error al obtener disponibilidad", {
@@ -481,12 +481,12 @@ export const updateUserAvailabilityMutationFn = async (
 
   try {
     const response = await API.put("/availability/update", data);
-    
+
     console.log("✅ [UPDATE_AVAILABILITY] Disponibilidad actualizada", {
       status: response.status,
       responseData: response.data
     });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [UPDATE_AVAILABILITY] Error al actualizar disponibilidad", {
@@ -511,14 +511,14 @@ export const getUserMeetingsQueryFn = async (
     const response = await API.get(
       `/meeting/user/all${filter ? `?filter=${filter}` : ""}`
     );
-    
+
     console.log("✅ [GET_MEETINGS] Reuniones obtenidas", {
       status: response.status,
       filter,
       meetingCount: response.data.meetings?.length || 0,
       responseData: response.data
     });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [GET_MEETINGS] Error al obtener reuniones", {
@@ -537,13 +537,13 @@ export const cancelMeetingMutationFn = async (meetingId: string) => {
 
   try {
     const response = await API.put(`/meeting/cancel/${meetingId}`, {});
-    
+
     // console.log("✅ [CANCEL_MEETING] Reunión cancelada exitosamente", {
     //   status: response.status,
     //   meetingId,
     //   responseData: response.data
     // });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [CANCEL_MEETING] Error al cancelar reunión", {
@@ -566,14 +566,14 @@ export const getAllPublicEventQueryFn = async (
 
   try {
     const response = await PublicAPI.get(`/event/public/${username}`);
-    
+
     console.log("✅ [GET_PUBLIC_EVENTS] Eventos públicos obtenidos", {
       status: response.status,
       username,
       eventCount: response.data.events?.length || 0,
       responseData: response.data
     });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [GET_PUBLIC_EVENTS] Error al obtener eventos públicos", {
@@ -597,7 +597,7 @@ export const getSinglePublicEventBySlugQueryFn = async (data: {
     const response = await PublicAPI.get(
       `/event/public/${data.username}/${data.slug}`
     );
-    
+
     console.log("✅ [GET_PUBLIC_EVENT_DETAIL] Detalle de evento obtenido", {
       status: response.status,
       username: data.username,
@@ -605,7 +605,7 @@ export const getSinglePublicEventBySlugQueryFn = async (data: {
       eventTitle: response.data.event?.title || "N/A",
       responseData: response.data
     });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [GET_PUBLIC_EVENT_DETAIL] Error al obtener detalle", {
@@ -618,24 +618,39 @@ export const getSinglePublicEventBySlugQueryFn = async (data: {
 
 export const getPublicAvailabilityByEventIdQueryFn = async (
   eventId: string,
-  timezone?: string
+  timezone?: string,
+  date?: string,
 ): Promise<PublicAvailabilityEventResponseType> => {
   // console.log("🌍 [GET_PUBLIC_AVAILABILITY] Obteniendo disponibilidad pública", {
-  //   endpoint: `/availability/public/${eventId}${timezone ? `?timezone=${timezone}` : ""}`,
+  //   endpoint: `/availability/public/${eventId}${timezone ? `?timezone=${timezone}` : ""}${date ? `&date=${date}` : ""}`,
   //   eventId,
-  //   timezone
+  //   timezone,
+  //   date
   // });
+  let url = `/availability/public/${eventId}`;
+  const params = new URLSearchParams();
 
+  if (timezone) params.append('timezone', timezone);
+  if (date) params.append('date', date);
+
+  const queryString = params.toString();
+  if (queryString) url += `?${queryString}`;
+
+  console.log("🌍 [GET_PUBLIC_AVAILABILITY] Obteniendo disponibilidad pública", {
+    endpoint: url,
+    eventId,
+    timezone,
+    date
+  });
   try {
-    const response = await PublicAPI.get(
-      `/availability/public/${eventId}${timezone ? `?timezone=${timezone}` : ""}`
-    );
+    const response = await PublicAPI.get(url);
     
     console.log("✅ [GET_PUBLIC_AVAILABILITY] Disponibilidad obtenida", {
       status: response.status,
       eventId,
       timezone,
-      availableSlots: response.data.availableSlots?.length || 0,
+      date,
+      availableDays: response.data.data?.length || 0,
       responseData: response.data
     });
     
@@ -644,7 +659,8 @@ export const getPublicAvailabilityByEventIdQueryFn = async (
     console.log("❌ [GET_PUBLIC_AVAILABILITY] Error al obtener disponibilidad", {
       error,
       eventId,
-      timezone
+      timezone,
+      date
     });
     throw error;
   }
@@ -662,14 +678,14 @@ export const scheduleMeetingMutationFn = async (data: CreateMeetingType) => {
 
   try {
     const response = await API.post("/meeting/public/create", data);
-    
+
     console.log("✅ [SCHEDULE_MEETING] Reunión programada exitosamente", {
       status: response.status,
       meetingId: response.data.meeting?.id || "N/A",
       eventId: data.eventId,
       responseData: response.data
     });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [SCHEDULE_MEETING] Error al programar reunión", {
@@ -740,7 +756,7 @@ export const getCalendarsQueryFn = async (
   if (options?.onlyWritable) params.append('onlyWritable', 'true');
   if (options?.onlyPrimary) params.append('onlyPrimary', 'true');
   if (options?.includeInactive) params.append('includeInactive', 'true');
-  
+
   // const queryString = params.toString();
   const endpoint = `/calendars`;
 
@@ -752,7 +768,7 @@ export const getCalendarsQueryFn = async (
 
   try {
     const response = await API.get(endpoint);
-    
+
     // console.log("✅ [GET_CALENDARS] Lista de calendarios obtenida", {
     //   status: response.status,
     //   calendarCount: response.data.data?.length || 0,
@@ -760,7 +776,7 @@ export const getCalendarsQueryFn = async (
     //   primaryCalendar: response.data.data?.find((cal: { isPrimary: boolean; name: string }) => cal.isPrimary)?.name || "N/A",
     //   responseData: response.data
     // });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [GET_CALENDARS] Error al obtener calendarios", {
@@ -818,7 +834,7 @@ export const syncCalendarsQueryFn = async (
 
   try {
     const response = await API.post("/calendars/sync", payload);
-    
+
     console.log("✅ [SYNC_CALENDARS] Sincronización completada", {
       status: response.status,
       syncedCount: response.data.data?.synced || 0,
@@ -828,7 +844,7 @@ export const syncCalendarsQueryFn = async (
       timestamp: response.data.data?.timestamp,
       responseData: response.data
     });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [SYNC_CALENDARS] Error en sincronización", {
@@ -874,7 +890,7 @@ export const getCalendarDetailsQueryFn = async (
 
   try {
     const response = await API.get(`/calendars/${calendarId}`);
-    
+
     // console.log("✅ [GET_CALENDAR_DETAILS] Detalles obtenidos", {
     //   status: response.status,
     //   calendarId,
@@ -884,7 +900,7 @@ export const getCalendarDetailsQueryFn = async (
     //   accessRole: response.data.data?.accessRole || "N/A",
     //   responseData: response.data
     // });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [GET_CALENDAR_DETAILS] Error al obtener detalles", {
@@ -917,7 +933,7 @@ export const getCalendarStatsQueryFn = async () => {
 
   try {
     const response = await API.get("/calendars/stats");
-    
+
     // console.log("✅ [GET_CALENDAR_STATS] Estadísticas obtenidas", {
     //   status: response.status,
     //   totalCalendars: response.data.data?.total || 0,
@@ -925,7 +941,7 @@ export const getCalendarStatsQueryFn = async () => {
     //   writableCalendars: response.data.data?.writable || 0,
     //   responseData: response.data
     // });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [GET_CALENDAR_STATS] Error al obtener estadísticas", {
