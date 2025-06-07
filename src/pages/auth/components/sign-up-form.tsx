@@ -27,6 +27,8 @@ const signUpSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters."),
 });
 
+const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
 type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 export function SignUpForm({
@@ -36,7 +38,7 @@ export function SignUpForm({
   const navigate = useNavigate();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: registerMutationFn,
+    mutationFn: (data: SignUpFormValues) => registerMutationFn(data, userTimezone), // 👈 Pasar timezone
   });
 
   const form = useForm<SignUpFormValues>({
@@ -81,10 +83,10 @@ export function SignUpForm({
               >
                 <Command className="size-5" />
               </div>
-              <span className="sr-only">OnMeetly</span>
+              <span className="sr-only">Agenda</span>
             </Link>
             <h2 className="text-xl font-bold text-[#0a2540]">
-              Sign up with OnMeetly
+              Sign up with Agenda
             </h2>
           </div>
 

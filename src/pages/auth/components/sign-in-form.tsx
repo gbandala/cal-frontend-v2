@@ -89,10 +89,10 @@ export function SignInForm({
               >
                 <Command className="size-5" />
               </div>
-              <span className="sr-only">OnMeetly</span>
+              <span className="sr-only">Agenda</span>
             </Link>
             <h2 className="text-xl font-bold text-[#0a2540]">
-              Log into your OnMeetly account
+              Log into your Agenda account
             </h2>
           </div>
 

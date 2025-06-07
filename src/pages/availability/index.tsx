@@ -9,9 +9,11 @@ import { Loader } from "@/components/loader";
 import { ErrorAlert } from "@/components/ErrorAlert";
 
 const Availability = () => {
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["user_availability"],
-    queryFn: getUserAvailabilityQueryFn,
+    // queryFn:  getUserAvailabilityQueryFn(timezone),
+    queryFn: () => getUserAvailabilityQueryFn(userTimezone),
   });
 
   // 🔧 FIX: Cambiar la lógica de acceso a los datos

@@ -123,7 +123,10 @@ export const loginMutationFn = async (
  * 
  * NOTA: También oculta el password en logs por seguridad
  */
-export const registerMutationFn = async (data: registerType) => {
+export const registerMutationFn = async (
+  data: registerType,
+  timezone?: string  // 👈 Nuevo parámetro opcional
+) => {
   // console.log("👤 [REGISTER] Iniciando registro de usuario", {
   //   endpoint: "/auth/register",
   //   inputData: {
@@ -133,7 +136,14 @@ export const registerMutationFn = async (data: registerType) => {
   // });
 
   try {
-    const response = await API.post("/auth/register", data);
+    let url = `/auth/register`;
+    const params = new URLSearchParams();
+    if (timezone) params.append('timezone', timezone);
+    const queryString = params.toString();
+    if (queryString) url += `?${queryString}`;
+    const response = await API.post(url, data);
+
+    // const response = await API.post("/auth/register", data);
 
     // console.log("✅ [REGISTER] Registro exitoso", {
     //   status: response.status,
@@ -448,19 +458,26 @@ export const connectAppIntegrationQueryFn = async (
 //*********** */ AVAILABILITY APIS
 
 export const getUserAvailabilityQueryFn =
-  async (): Promise<UserAvailabilityResponseType> => {
+  async (
+    timezone?: string,
+  ): Promise<UserAvailabilityResponseType> => {
     // console.log("⏰ [GET_AVAILABILITY] Obteniendo disponibilidad del usuario", {
     //   endpoint: "/availability/me"
     // });
 
     try {
-      const response = await API.get(`/availability/me`);
+      let url = `/availability/me`;
+      const params = new URLSearchParams();
+      if (timezone) params.append('timezone', timezone);
+      const queryString = params.toString();
+      if (queryString) url += `?${queryString}`;
+      const response = await API.get(url);
 
-      // console.log("✅ [GET_AVAILABILITY] Disponibilidad obtenida", {
-      //   status: response.status,
-      //   hasSchedule: !!response.data.schedule,
-      //   responseData: response.data.availability
-      // });
+      console.log("✅ [GET_AVAILABILITY] Disponibilidad obtenida", {
+        status: response.status,
+        hasSchedule: !!response.data.schedule,
+        responseData: response.data.availability
+      });
 
       return response.data;
     } catch (error) {
@@ -644,7 +661,7 @@ export const getPublicAvailabilityByEventIdQueryFn = async (
   });
   try {
     const response = await PublicAPI.get(url);
-    
+
     console.log("✅ [GET_PUBLIC_AVAILABILITY] Disponibilidad obtenida", {
       status: response.status,
       eventId,
@@ -653,7 +670,7 @@ export const getPublicAvailabilityByEventIdQueryFn = async (
       availableDays: response.data.data?.length || 0,
       responseData: response.data
     });
-    
+
     return response.data;
   } catch (error) {
     console.log("❌ [GET_PUBLIC_AVAILABILITY] Error al obtener disponibilidad", {
