@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { addMinutes, parseISO } from "date-fns";
+// import { addMinutes, parseISO } from "date-fns";
 import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -22,16 +22,24 @@ import { scheduleMeetingMutationFn } from "@/lib/api";
 import { toast } from "sonner";
 import { Loader } from "@/components/loader";
 
+
+
+
 const BookingForm = (props: { eventId: string; duration: number }) => {
   const { eventId, duration } = props;
   const [meetLink, setMeetLink] = useState("");
 
-  const { selectedDate, isSuccess, selectedSlot, handleSuccess } =
+  const { timezone, selectedDate, isSuccess, selectedSlot, handleSuccess } =
     useBookingState();
 
+  // const { mutate, isPending } = useMutation({
+  //   mutationFn: scheduleMeetingMutationFn,
+  // });
+
   const { mutate, isPending } = useMutation({
-    mutationFn: scheduleMeetingMutationFn,
-  });
+  mutationFn: (data: BookingFormData & { eventId: string; startTime: string; endTime: string; timezone: string }) => 
+    scheduleMeetingMutationFn(data, data.timezone),
+});
 
   const bookingFormSchema = z.object({
     guestName: z.string().min(1, "Name is required"),
@@ -52,25 +60,42 @@ const BookingForm = (props: { eventId: string; duration: number }) => {
 
   const onSubmit = (values: BookingFormData) => {
     if (!eventId || !selectedSlot || !selectedDate) return;
+
     // Decode the selected slot to get the slotDate
-    // (e.g., "2025-03-20T14:00:00.000Z")
     const decodedSlotDate = decodeURIComponent(selectedSlot);
+    // console.log('decodedSlotDate:', decodedSlotDate);
 
-    // Parse the slotDate into a Date object using date-fns
-    const startTime = parseISO(decodedSlotDate);
+    // Usar la string directamente para startTime
+    const startTimeString = decodedSlotDate; // "2025-06-25T15:00:00.000Z"
+    // console.log('startTimeString:', startTimeString);
 
-    // Calculate the end time by adding the
-    // duration of event (in minutes)
-    // to the start time
-    const endTime = addMinutes(startTime, duration);
+    // Extraer componentes de la fecha UTC para calcular endTime
+    const dateMatch = startTimeString.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+    if (!dateMatch) throw new Error('Invalid date format');
 
+    const [, year, month, day, hours, minutes] = dateMatch;
+
+    // Crear endTime usando Date.UTC para forzar interpretación UTC
+    const endTime = new Date(Date.UTC(
+      parseInt(year),
+      parseInt(month) - 1, // Date.UTC months are 0-indexed
+      parseInt(day),
+      parseInt(hours),
+      parseInt(minutes) + duration // Añadir duración aquí
+    ));
+
+    const endTimeString = endTime.toISOString().slice(0, 16);
     const payload = {
       ...values,
       eventId,
-      startTime: startTime.toISOString(),
-      endTime: endTime.toISOString(),
+      startTime: startTimeString,  // 👈 String original del estado
+      endTime: endTimeString,      // 👈 Calculada con timestamp
+      timezone: timezone,
     };
-    console.log("Form Data:", payload);
+
+    // console.log("Form Data:", payload);
+    console.log("startTime should be:", startTimeString);
+    console.log("endTime calculated:", endTimeString);
 
     if (isPending) return;
 
@@ -86,7 +111,6 @@ const BookingForm = (props: { eventId: string; duration: number }) => {
       },
     });
   };
-
   return (
     <div className="max-w-md pt-6 px-6">
       {isSuccess ? (

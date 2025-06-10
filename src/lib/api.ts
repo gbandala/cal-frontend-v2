@@ -683,7 +683,7 @@ export const getPublicAvailabilityByEventIdQueryFn = async (
   }
 };
 
-export const scheduleMeetingMutationFn = async (data: CreateMeetingType) => {
+export const scheduleMeetingMutationFn = async (data: CreateMeetingType, timezone?: string) => {
   // console.log("📅 [SCHEDULE_MEETING] Programando nueva reunión", {
   //   endpoint: "/meeting/public/create",
   //   inputData: {
@@ -694,7 +694,18 @@ export const scheduleMeetingMutationFn = async (data: CreateMeetingType) => {
   // });
 
   try {
-    const response = await API.post("/meeting/public/create", data);
+    console.log('startTime payload>', data.startTime);
+    console.log('endTime payload>', data.endTime);
+    console.log('timezone payload>', timezone);
+    
+
+
+    let url = `/meeting/public/create/`;
+    const params = new URLSearchParams();
+    if (timezone) params.append('timezone', timezone);
+    const queryString = params.toString();
+    if (queryString) url += `?${queryString}`;
+    const response = await API.post(url, data);
 
     console.log("✅ [SCHEDULE_MEETING] Reunión programada exitosamente", {
       status: response.status,

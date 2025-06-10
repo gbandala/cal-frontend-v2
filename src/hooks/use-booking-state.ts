@@ -1,12 +1,12 @@
 import { parseAsBoolean, useQueryState } from "nuqs";
 import { CalendarDate, getLocalTimeZone } from "@internationalized/date";
 import { parse } from "date-fns";
-import { toZonedTime } from "date-fns-tz";
+// import { toZonedTime } from "date-fns-tz";
 
 export const useBookingState = () => {
 
 
-  
+
   const [selectedDate, setSelectedDate] = useQueryState<CalendarDate>("date", {
     parse: (value) =>
       new CalendarDate(
@@ -27,7 +27,7 @@ export const useBookingState = () => {
     defaultValue: getLocalTimeZone(), // Default to user's system timezone
   });
 
-  
+
   const [hourType, setHourType] = useQueryState<"12h" | "24h">("hourType", {
     defaultValue: "24h",
     parse: (value) => (value === "12h" ? "12h" : "24h"),
@@ -48,22 +48,27 @@ export const useBookingState = () => {
       setSelectedSlot(null);
       return;
     }
-    // Parse the slot time (e.g., "09:00") and set it on the selected date
+
+    // Parse the slot time (e.g., "09:00") 
     const parsedSlotTime = parse(slot, "HH:mm", new Date());
-    const slotDate = selectedDate.toDate(getLocalTimeZone());
-    slotDate.setHours(
-      parsedSlotTime.getHours(),
-      parsedSlotTime.getMinutes(),
-      0,
-      0
-    );
-    // Convert to UTC, format, and encode
-    const slotDateInUTC = toZonedTime(slotDate, timezone);
-    console.log(slotDateInUTC.toISOString(), ".toISOString()");
-    const encodedSlot = encodeURIComponent(slotDateInUTC.toISOString());
+    // console.log('horario:', parsedSlotTime);
+
+    // Build the date directly in UTC
+    const year = selectedDate.year;
+    const month = selectedDate.month.toString().padStart(2, '0');
+    const day = selectedDate.day.toString().padStart(2, '0');
+    const hours = parsedSlotTime.getHours().toString().padStart(2, '0');
+    const minutes = parsedSlotTime.getMinutes().toString().padStart(2, '0');
+
+    // Create UTC datetime string directly
+    const utcDateTimeString = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+    // console.log('UTC datetime:', utcDateTimeString);
+
+    const encodedSlot = encodeURIComponent(utcDateTimeString);
+    // console.log('encodedSlot:', encodedSlot);
     setSelectedSlot(encodedSlot);
   };
-
   const handleNext = () => {
     setNext(true);
   };
