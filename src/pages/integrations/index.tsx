@@ -49,7 +49,7 @@ const Integrations = () => {
                     <IntegrationCard
                       key={integration.app_type}
                       isDisabled={
-                        integration.app_type === "ZOOM_MEETING" ||
+                        // integration.app_type === "ZOOM_MEETING" ||
                         integration.app_type === "MICROSOFT_TEAMS" ||
                         integration.app_type === "OUTLOOK_CALENDAR"
                       }

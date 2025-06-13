@@ -57,7 +57,7 @@ export const locationOptions = [
     label: "Zoom",
     value: VideoConferencingPlatform.ZOOM_MEETING,
     logo: IntegrationLogos.ZOOM_MEETING,
-    isAvailable: false,
+    isAvailable: true,
   },
   {
     label: "Microsoft",

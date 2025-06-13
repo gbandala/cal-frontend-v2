@@ -30,10 +30,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { checkIntegrationQueryFn, CreateEventMutationFn } from "@/lib/api";
 import { toast } from "sonner";
 import { Loader } from "@/components/loader";
-// ✅ NUEVA IMPORTACIÓN - Calendar Selector
 import CalendarSelector from "@/components/calendar-selector";
-
-
 
 const NewEventDialog = (props: { btnVariant?: string }) => {
   const { btnVariant } = props;
@@ -48,15 +45,18 @@ const NewEventDialog = (props: { btnVariant?: string }) => {
 
   const [error, setError] = useState<string | null>(null);
   const [isChecking, setIsChecking] = useState(false);
-  const [appConnected, setAppConnected] = useState<boolean>(false);
+
+  // ✅ CAMBIO: Estado específico por plataforma
+  const [connectionStatus, setConnectionStatus] = useState<{
+    [key in VideoConferencingPlatform]?: boolean;
+  }>({});
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  // ✅ NUEVO STATE - Calendar selection
+  // Calendar selection state
   const [selectedCalendarId, setSelectedCalendarId] = useState<string>("");
   const [selectedCalendarName, setSelectedCalendarName] = useState<string>("");
-  
 
-  // ✅ UPDATED SCHEMA - Incluyendo campos de calendario
   const eventSchema = z.object({
     title: z.string().min(1, "Event name is required"),
     duration: z
@@ -73,7 +73,6 @@ const NewEventDialog = (props: { btnVariant?: string }) => {
       .refine((value) => value !== undefined, {
         message: "Location type is required",
       }),
-    // ✅ NUEVOS CAMPOS - Calendar específico
     calendar_id: z.string().optional(),
     calendar_name: z.string().optional(),
   });
@@ -87,7 +86,6 @@ const NewEventDialog = (props: { btnVariant?: string }) => {
       title: "",
       duration: 30,
       description: "",
-      // ✅ NUEVOS DEFAULTS
       calendar_id: "",
       calendar_name: "",
     },
@@ -95,98 +93,153 @@ const NewEventDialog = (props: { btnVariant?: string }) => {
 
   const { isValid } = form.formState;
 
+  // ✅ CAMBIO: Función mejorada que maneja múltiples plataformas
   const handleLocationTypeChange = async (value: VideoConferencingPlatform) => {
     setSelectedLocationType(value);
-    setAppConnected(false);
+    setError(null);
 
-    if (value === VideoConferencingPlatform.GOOGLE_MEET_AND_CALENDAR) {
+    // ✅ LIMPIAR campos de calendario si no es Google Meet
+    if (value !== VideoConferencingPlatform.GOOGLE_MEET_AND_CALENDAR) {
+      setSelectedCalendarId("");
+      setSelectedCalendarName("");
+      form.setValue("calendar_id", "");
+      form.setValue("calendar_name", "");
+    }
+
+    // Si ya está verificado, solo actualizar el form
+    if (connectionStatus[value] === true) {
+      form.setValue("locationType", value);
+      form.trigger("locationType");
+      return;
+    }
+
+    // Verificar conexión según la plataforma
+    if (
+      value === VideoConferencingPlatform.GOOGLE_MEET_AND_CALENDAR ||
+      value === VideoConferencingPlatform.ZOOM_MEETING ||
+      value === VideoConferencingPlatform.MICROSOFT_TEAMS
+    ) {
       setIsChecking(true);
       try {
-        const { isConnected } = await checkIntegrationQueryFn(
-          VideoConferencingPlatform.GOOGLE_MEET_AND_CALENDAR
-        );
+        const { isConnected } = await checkIntegrationQueryFn(value);
 
         if (!isConnected) {
+          const platformName = getPlatformName(value);
           setError(
-            `Google Meet is not connected. <a href=${PROTECTED_ROUTES.INTEGRATIONS} target="_blank" class='underline text-primary'>Visit the integration page</a> to connect your account.`
+            `${platformName} is not connected. <a href=${PROTECTED_ROUTES.INTEGRATIONS} target="_blank" class='underline text-primary'>Visit the integration page</a> to connect your account.`
           );
+          setConnectionStatus(prev => ({ ...prev, [value]: false }));
           return;
         }
-        setError(null);
-        setAppConnected(true);
+
+        // ✅ Marcar como conectado y actualizar form
+        setConnectionStatus(prev => ({ ...prev, [value]: true }));
         form.setValue("locationType", value);
         form.trigger("locationType");
+
       } catch (error) {
         console.log(error);
-        setError("Failed to check Google Meet integration status.");
+        const platformName = getPlatformName(value);
+        setError(`Failed to check ${platformName} integration status.`);
+        setConnectionStatus(prev => ({ ...prev, [value]: false }));
       } finally {
         setIsChecking(false);
       }
     } else {
-      setError(null);
+      // Para plataformas que no requieren verificación
       form.setValue("locationType", value);
+      form.trigger("locationType");
     }
   };
 
-  // ✅ NUEVO HANDLER - Calendar selection
+  // ✅ NUEVA: Helper function para obtener nombres de plataforma
+  const getPlatformName = (platform: VideoConferencingPlatform): string => {
+    switch (platform) {
+      case VideoConferencingPlatform.GOOGLE_MEET_AND_CALENDAR:
+        return "Google Meet";
+      case VideoConferencingPlatform.ZOOM_MEETING:
+        return "Zoom";
+      case VideoConferencingPlatform.MICROSOFT_TEAMS:
+        return "Microsoft Teams";
+      default:
+        return "Platform";
+    }
+  };
+
+  // ✅ NUEVA: Helper para verificar si una plataforma está conectada
+  const isPlatformConnected = (platform: VideoConferencingPlatform): boolean => {
+    return connectionStatus[platform] === true;
+  };
+
+  // ✅ NUEVA: Helper para verificar si la plataforma seleccionada está conectada
+  const isSelectedPlatformConnected = (): boolean => {
+    if (!selectedLocationType) return false;
+    return isPlatformConnected(selectedLocationType);
+  };
+
   const handleCalendarChange = (calendarId: string, calendarName: string) => {
     setSelectedCalendarId(calendarId);
     setSelectedCalendarName(calendarName);
     form.setValue("calendar_id", calendarId);
     form.setValue("calendar_name", calendarName);
-    
-    // console.log("📅 [CALENDAR_SELECTED] Calendar seleccionado", {
-    //   calendarId,
-    //   calendarName,
-    //   fallbackToPrimary: !calendarId
-    // });
   };
 
-  // ✅ NUEVO HANDLER - Calendar error
   const handleCalendarError = (error: unknown) => {
     console.error("❌ [CALENDAR_ERROR] Error en selector de calendario:", error);
     toast.error("Error al cargar calendarios. Se usará el calendario principal.");
   };
 
   const onSubmit = (data: EventFormData) => {
-    // console.log("📝 [SUBMIT_EVENT] Datos del formulario:", {
-    //   ...data,
-    //   // Log específico para calendario
-    //   calendarInfo: {
-    //     id: data.calendar_id || "primary (fallback)",
-    //     name: data.calendar_name || "Calendario principal",
-    //     isSpecific: !!data.calendar_id
-    //   }
-    // });
+    const baseData = {
+      title: data.title,
+      duration: data.duration,
+      description: data.description || "",
+      locationType: data.locationType,
+    };
+
+    // ✅ Solo incluir calendar_id y calendar_name para Google Meet
+    const submitData = data.locationType === VideoConferencingPlatform.GOOGLE_MEET_AND_CALENDAR
+      ? {
+        ...baseData,
+        calendar_id: data.calendar_id ? data.calendar_id : undefined, // Usar undefined si está vacío
+        calendar_name: data.calendar_name ? data.calendar_name : undefined,
+      }
+      : {
+        ...baseData,
+        // ✅ Para Zoom y otras plataformas, NO enviar calendar_id/calendar_name
+        calendar_id: undefined,
+        calendar_name: undefined,
+      };
+
+    console.log("📝 [SUBMIT_EVENT] Datos preparados para envío:", {
+      platform: data.locationType,
+      includesCalendar: data.locationType === VideoConferencingPlatform.GOOGLE_MEET_AND_CALENDAR,
+      submitData
+    });
 
     mutate(
-      {
-        ...data,
-        duration: data.duration,
-        description: data.description || "",
-        // ✅ INCLUIR CAMPOS DE CALENDARIO
-        calendar_id: data.calendar_id || undefined, // Usar undefined si está vacío
-        calendar_name: data.calendar_name || undefined,
-      },
+      submitData,
       {
         onSuccess: (response) => {
           queryClient.invalidateQueries({
             queryKey: ["event_list"],
           });
-          // ✅ LIMPIAR ESTADO DE CALENDARIO
+
+          // Reset all states
           setSelectedCalendarId("");
           setSelectedCalendarName("");
           setSelectedLocationType(null);
+          setConnectionStatus({});
+          setError(null);
           setIsOpen(false);
-          setAppConnected(false);
           form.reset();
-          
+
           console.log("✅ [EVENT_CREATED] Evento creado exitosamente", {
             eventId: response.event?.id,
             calendarUsed: response.event?.calendar_id || "primary",
             calendarName: response.event?.calendar_name || "Calendario principal"
           });
-          
+
           toast.success("Event created successfully");
         },
         onError: (error) => {
@@ -237,7 +290,7 @@ const NewEventDialog = (props: { btnVariant?: string }) => {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 name="description"
                 control={form.control}
@@ -257,7 +310,7 @@ const NewEventDialog = (props: { btnVariant?: string }) => {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 name="duration"
                 control={form.control}
@@ -299,28 +352,25 @@ const NewEventDialog = (props: { btnVariant?: string }) => {
                             className={cn(
                               `w-full h-[70px] cursor-pointer border disabled:pointer-events-none border-[#B2B2B2] mx-auto pt-1 pr-0.5 pl-0.5 rounded-[5px] flex flex-col items-center justify-center`,
                               selectedLocationType === option.value &&
-                                "border-primary bg-primary/10",
+                              "border-primary bg-primary/10",
                               !option.isAvailable &&
-                                "pointer-events-none !text-gray-400 opacity-80 grayscale",
+                              "pointer-events-none !text-gray-400 opacity-80 grayscale",
                               selectedLocationType === option.value &&
-                                !!error &&
-                                "!border-destructive !bg-destructive/10",
-                              appConnected &&
-                                selectedLocationType === option.value &&
-                                "!border-green-500 !bg-green-50"
+                              !!error &&
+                              "!border-destructive !bg-destructive/10",
+                              // ✅ CAMBIO: Verificar conexión específica por plataforma
+                              isPlatformConnected(option.value) &&
+                              selectedLocationType === option.value &&
+                              "!border-green-500 !bg-green-50"
                             )}
                             disabled={isChecking}
+                            // ✅ CAMBIO: Permitir cambiar siempre (quitar la condición !appConnected)
                             onClick={() => {
-                              if (
-                                !appConnected &&
-                                selectedLocationType !== option.value
-                              ) {
-                                handleLocationTypeChange(option.value);
-                              }
+                              handleLocationTypeChange(option.value);
                             }}
                           >
                             {isChecking &&
-                            selectedLocationType === option.value ? (
+                              selectedLocationType === option.value ? (
                               <Loader size="sm" />
                             ) : (
                               <>
@@ -333,6 +383,10 @@ const NewEventDialog = (props: { btnVariant?: string }) => {
                                 <span className="mt-1 text-sm">
                                   {option.label}
                                 </span>
+                                {/* ✅ NUEVO: Indicador visual de estado de conexión */}
+                                {isPlatformConnected(option.value) && (
+                                  <div className="absolute top-1 right-1 w-2 h-2 bg-green-500 rounded-full"></div>
+                                )}
                               </>
                             )}
                           </button>
@@ -355,7 +409,6 @@ const NewEventDialog = (props: { btnVariant?: string }) => {
                 )}
               />
 
-              {/* ✅ NUEVO CAMPO - Calendar Selector */}
               <FormField
                 name="calendar_id"
                 control={form.control}
@@ -382,7 +435,6 @@ const NewEventDialog = (props: { btnVariant?: string }) => {
                       />
                     </FormControl>
                     <FormMessage />
-                    {/* Información adicional */}
                     <div className="text-xs text-gray-500 mt-1">
                       {selectedCalendarId ? (
                         <span>
@@ -403,7 +455,14 @@ const NewEventDialog = (props: { btnVariant?: string }) => {
               className="bg-[#f6f7f9] border-t px-6 py-3 !mt-6
              border-[#e5e7eb] rounded-b-[8px]"
             >
-              <Button type="submit" disabled={!isValid || isPending}>
+              <Button
+                type="submit"
+                disabled={
+                  !isValid ||
+                  isPending ||
+                  (!!selectedLocationType && !isSelectedPlatformConnected())
+                }
+              >
                 {isPending ? (
                   <Loader size="sm" color="white" />
                 ) : (

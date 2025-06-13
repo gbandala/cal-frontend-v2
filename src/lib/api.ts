@@ -444,7 +444,7 @@ export const connectAppIntegrationQueryFn = async (
     //   appType,
     //   responseData: response.data
     // });
-
+    console.log("response.data>", response.data);
     return response.data;
   } catch (error) {
     console.log("❌ [CONNECT_INTEGRATION] Error al conectar integración", {
