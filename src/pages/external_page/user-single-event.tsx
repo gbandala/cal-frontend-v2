@@ -76,7 +76,11 @@ const UserSingleEventPage = () => {
               {next ? (
                 <Fragment>
                   {/* {Booking Form} */}
-                  <BookingForm eventId={event.id} duration={event.duration} />
+                  <BookingForm
+                    eventId={event.id}
+                    duration={event.duration}
+                    eventLocationType={event.locationType}
+                  />
                 </Fragment>
               ) : (
                 <Fragment>

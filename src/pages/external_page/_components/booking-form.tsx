@@ -21,25 +21,38 @@ import { CheckIcon, ExternalLink } from "lucide-react";
 import { scheduleMeetingMutationFn } from "@/lib/api";
 import { toast } from "sonner";
 import { Loader } from "@/components/loader";
+import { locationOptions } from "@/lib/types";
 
 
-
-
-const BookingForm = (props: { eventId: string; duration: number }) => {
-  const { eventId, duration } = props;
+const BookingForm = (props: { eventId: string; duration: number; eventLocationType: string; }) => {
+  const { eventId, duration, eventLocationType } = props;
   const [meetLink, setMeetLink] = useState("");
 
   const { timezone, selectedDate, isSuccess, selectedSlot, handleSuccess } =
     useBookingState();
+    
+  // 👈 Lógica para obtener información del tipo de ubicación
+  const locationOption = locationOptions.find(
+    (option) => option.value === eventLocationType
+  );
 
-  // const { mutate, isPending } = useMutation({
-  //   mutationFn: scheduleMeetingMutationFn,
-  // });
+  const getJoinButtonText = () => {
+    switch (eventLocationType) {
+      case 'google_meet':
+        return 'Join Google Meet';
+      case 'zoom':
+        return 'Join Zoom Meeting';
+      case 'microsoft_teams':
+        return 'Join Microsoft Teams';
+      default:
+        return 'Join Meeting';
+    }
+  };
 
   const { mutate, isPending } = useMutation({
-  mutationFn: (data: BookingFormData & { eventId: string; startTime: string; endTime: string; timezone: string }) => 
-    scheduleMeetingMutationFn(data, data.timezone),
-});
+    mutationFn: (data: BookingFormData & { eventId: string; startTime: string; endTime: string; timezone: string }) =>
+      scheduleMeetingMutationFn(data, data.timezone),
+  });
 
   const bookingFormSchema = z.object({
     guestName: z.string().min(1, "Name is required"),
@@ -129,8 +142,16 @@ const BookingForm = (props: { eventId: string; duration: number }) => {
           </p>
           <a href={meetLink} target="_blank" rel="noopener noreferrer">
             <Button>
-              <ExternalLink className="w-4 h-4" />
-              <span>Join Google Meet</span>
+              {locationOption?.logo ? (
+                <img
+                  src={locationOption.logo as string}
+                  alt={locationOption.label}
+                  className="w-4 h-4"
+                />
+              ) : (
+                <ExternalLink className="w-4 h-4" />
+              )}
+              <span>{getJoinButtonText()}</span>
             </Button>
           </a>
         </div>
